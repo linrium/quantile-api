@@ -2,7 +2,7 @@ use crate::pool::{pool_dto, pool_model};
 use crate::{compute, db};
 use warp::http::StatusCode;
 
-pub async fn upsert_pool(
+pub async fn append_pool(
     mut db: db::Db,
     data: pool_dto::InsertDataDto,
 ) -> Result<pool_model::UpsertPoolResult, pool_model::UpsertPoolError> {
@@ -60,7 +60,7 @@ mod tests {
             pool_id: 1,
             pool_values: vec![1, 4, 2],
         };
-        let _ = pool_service::upsert_pool(db.clone(), data).await.unwrap();
+        let _ = pool_service::append_pool(db.clone(), data).await.unwrap();
 
         // test query
         let data = pool_dto::QueryDataDto {
@@ -102,13 +102,13 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_upsert_pool_insert_success() -> Result<(), pool_model::UpsertPoolError> {
+    async fn test_append_pool_insert_success() -> Result<(), pool_model::UpsertPoolError> {
         let db = db::Db::new();
         let data = pool_dto::InsertDataDto {
             pool_id: 1,
             pool_values: vec![1, 4, 2],
         };
-        let result = pool_service::upsert_pool(db.clone(), data).await?;
+        let result = pool_service::append_pool(db.clone(), data).await?;
         let expected = pool_model::UpsertPoolResult {
             status: UpdateStatus::Inserted.to_string(),
         };
@@ -124,22 +124,22 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_upsert_pool_update_success() -> Result<(), pool_model::UpsertPoolError> {
+    async fn test_append_pool_update_success() -> Result<(), pool_model::UpsertPoolError> {
         let db = db::Db::new();
         let data = pool_dto::InsertDataDto {
             pool_id: 1,
             pool_values: vec![1, 4, 5],
         };
-        let _ = pool_service::upsert_pool(db.clone(), data).await?;
+        let _ = pool_service::append_pool(db.clone(), data).await?;
 
         let data = pool_dto::InsertDataDto {
             pool_id: 1,
             pool_values: vec![2, 7],
         };
-        let result = pool_service::upsert_pool(db.clone(), data).await?;
+        let result = pool_service::append_pool(db.clone(), data).await?;
 
         let expected = pool_model::UpsertPoolResult {
-            status: UpdateStatus::Updated.to_string(),
+            status: UpdateStatus::Appended.to_string(),
         };
 
         assert_eq!(result, expected);

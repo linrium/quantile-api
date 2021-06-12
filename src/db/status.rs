@@ -3,7 +3,7 @@ use core::fmt;
 #[derive(Debug, PartialEq)]
 pub enum UpdateStatus {
     Inserted,
-    Updated,
+    Appended,
 }
 
 impl fmt::Display for UpdateStatus {
@@ -19,6 +19,6 @@ mod tests {
     #[test]
     fn test_to_string() {
         assert_eq!(UpdateStatus::Inserted.to_string(), "inserted");
-        assert_eq!(UpdateStatus::Updated.to_string(), "updated");
+        assert_eq!(UpdateStatus::Appended.to_string(), "append");
     }
 }

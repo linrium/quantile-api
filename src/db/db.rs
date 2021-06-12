@@ -39,7 +39,7 @@ impl Db {
             new_values.sort();
             data.insert(id, new_values);
 
-            return Ok(UpdateStatus::Updated);
+            return Ok(UpdateStatus::Appended);
         }
 
         let mut new_values = values;
@@ -115,7 +115,7 @@ mod tests {
         let values = vec![3, 7];
         let result = db.update_by_id(1, values.clone()).await?;
 
-        assert_eq!(result, UpdateStatus::Updated);
+        assert_eq!(result, UpdateStatus::Appended);
 
         // get values
         let result = db.find_by_id(1).await;

@@ -6,17 +6,17 @@ use warp::Filter;
 pub fn create_route(
     db: db::Db,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    upsert_pool_route(db.clone()).or(query_pool_route(db))
+    append_pool_route(db.clone()).or(query_pool_route(db))
 }
 
-fn upsert_pool_route(
+fn append_pool_route(
     db: db::Db,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    warp::path!("upsert")
+    warp::path!("append")
         .and(warp::post())
         .and(with_db(db.clone()))
         .and(warp::body::json())
-        .and_then(pool_handler::upsert_pool)
+        .and_then(pool_handler::append_pool)
 }
 
 fn query_pool_route(
@@ -37,7 +37,7 @@ mod tests {
     use warp::hyper::http::StatusCode;
 
     #[tokio::test]
-    async fn test_upsert_pool_insert_success() {
+    async fn test_append_pool_insert_success() {
         let db = db::Db::new();
         let data = pool_dto::InsertDataDto {
             pool_id: 1,
@@ -47,7 +47,7 @@ mod tests {
 
         let resp = warp::test::request()
             .method("POST")
-            .path("/upsert")
+            .path("/append")
             .json(&data)
             .reply(&api)
             .await;
@@ -63,7 +63,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_upsert_pool_update_success() {
+    async fn test_append_pool_update_success() {
         let db = db::Db::new();
         let api = pool_router::create_route(db);
 
@@ -74,7 +74,7 @@ mod tests {
         };
         let resp = warp::test::request()
             .method("POST")
-            .path("/upsert")
+            .path("/append")
             .json(&data)
             .reply(&api)
             .await;
@@ -87,7 +87,7 @@ mod tests {
         };
         let resp = warp::test::request()
             .method("POST")
-            .path("/upsert")
+            .path("/append")
             .json(&data)
             .reply(&api)
             .await;
@@ -95,7 +95,7 @@ mod tests {
         let body = resp.body();
         let body: pool_model::UpsertPoolResult = serde_json::from_slice(body).unwrap();
         let expected = pool_model::UpsertPoolResult {
-            status: UpdateStatus::Updated.to_string(),
+            status: UpdateStatus::Appended.to_string(),
         };
 
         assert_eq!(resp.status(), StatusCode::OK);
@@ -114,7 +114,7 @@ mod tests {
         };
         let resp = warp::test::request()
             .method("POST")
-            .path("/upsert")
+            .path("/append")
             .json(&data)
             .reply(&api)
             .await;
