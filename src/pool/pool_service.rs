@@ -7,7 +7,7 @@ pub async fn upsert_pool(
     data: pool_dto::InsertDataDto,
 ) -> Result<pool_model::UpsertPoolResult, pool_model::UpsertPoolError> {
     let status = db
-        .update_by_id(data.pool_id, data.pool_values, true)
+        .update_by_id(data.pool_id, data.pool_values)
         .await
         .map_err(|e| pool_model::UpsertPoolError {
             code: StatusCode::BAD_REQUEST,
@@ -116,10 +116,10 @@ mod tests {
         assert_eq!(result, expected);
 
         // test sorted
-        let result = db.find_by_id(1).await.unwrap();
+        let result = db.find_by_id(1).await;
         let expected = vec![1, 2, 4];
 
-        assert_eq!(result, expected);
+        assert_eq!(result, Some(expected));
         Ok(())
     }
 
@@ -145,10 +145,10 @@ mod tests {
         assert_eq!(result, expected);
 
         // test sorted
-        let result = db.find_by_id(1).await.unwrap();
+        let result = db.find_by_id(1).await;
         let expected = vec![1, 2, 4, 5, 7];
 
-        assert_eq!(result, expected);
+        assert_eq!(result, Some(expected));
         Ok(())
     }
 }
