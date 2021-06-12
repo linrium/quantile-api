@@ -11,6 +11,10 @@ RUST_LOG=info cargo run --release
 ## Unit test
 `cargo test`
 
+## Coverage test
+
+Following this instruction https://github.com/mozilla/grcov#how-to-get-grcov
+
 ## API
 ### Postman online document
 https://documenter.getpostman.com/view/2939491/TzeTJV3d
