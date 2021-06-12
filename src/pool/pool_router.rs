@@ -1,30 +1,35 @@
-use crate::common::with_db;
+use crate::common::{with_db, with_caching};
 use crate::db;
 use crate::pool::pool_handler;
 use warp::Filter;
 
 pub fn create_route(
     db: db::Db,
+    caching: db::Caching,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    append_pool_route(db.clone()).or(query_pool_route(db))
+    append_pool_route(db.clone(), caching.clone()).or(query_pool_route(db, caching))
 }
 
 fn append_pool_route(
     db: db::Db,
+    caching: db::Caching,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("append")
         .and(warp::post())
-        .and(with_db(db.clone()))
+        .and(with_db(db))
+        .and(with_caching(caching))
         .and(warp::body::json())
         .and_then(pool_handler::append_pool)
 }
 
 fn query_pool_route(
     db: db::Db,
+    caching: db::Caching,
 ) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("query")
         .and(warp::post())
-        .and(with_db(db.clone()))
+        .and(with_db(db))
+        .and(with_caching(caching))
         .and(warp::body::json())
         .and_then(pool_handler::query_pool)
 }

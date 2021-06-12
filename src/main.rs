@@ -16,8 +16,9 @@ async fn main() {
 
     let port = dotenv!("PORT").parse().expect("can not parse port");
     let db = db::Db::new();
+    let caching = db::Caching::new();
 
-    let pool_routes = pool_router::create_route(db);
+    let pool_routes = pool_router::create_route(db, caching);
 
     warp::serve(pool_routes.recover(common::response::handle_rejection))
         .run(([0, 0, 0, 0], port))

@@ -7,7 +7,7 @@ pub struct InsertDataDto {
     pub pool_values: Vec<i32>,
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Copy)]
 #[serde(rename_all = "camelCase")]
 pub struct QueryDataDto {
     pub pool_id: i32,

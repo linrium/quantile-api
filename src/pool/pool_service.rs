@@ -25,6 +25,7 @@ pub async fn query_pool(
 ) -> Result<pool_model::QueryPoolResult, pool_model::QueryPoolError> {
     let pool_values = db.find_by_id(data.pool_id).await;
 
+    // TODO: impl caching
     if let Some(v) = pool_values {
         let quantile =
             compute::percentile(&v, data.percentile).map_err(|e| pool_model::QueryPoolError {
