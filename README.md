@@ -19,6 +19,10 @@ Following this instruction https://github.com/mozilla/grcov#how-to-get-grcov
 ## Load test
 (Without caching)
 ![image](https://user-images.githubusercontent.com/14315537/121772318-e6a86900-cb9e-11eb-87ba-db2bb635ea39.png)
+
+(With caching)
+![image](https://user-images.githubusercontent.com/14315537/121773474-65ed6b00-cba6-11eb-9d77-93fa6614f5a4.png)
+
 Following this instruction https://github.com/alexfernandez/loadtest
 Example:
 ```shell script
