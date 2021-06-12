@@ -1,14 +1,17 @@
-use warp::Filter;
-use crate::pool::pool_handler;
-use crate::db;
 use crate::common::with_db;
+use crate::db;
+use crate::pool::pool_handler;
+use warp::Filter;
 
-pub fn create_route(db: db::Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
-    upsert_pool_route(db.clone())
-        .or(query_pool_route(db))
+pub fn create_route(
+    db: db::Db,
+) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+    upsert_pool_route(db.clone()).or(query_pool_route(db))
 }
 
-fn upsert_pool_route(db: db::Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+fn upsert_pool_route(
+    db: db::Db,
+) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("upsert")
         .and(warp::post())
         .and(with_db(db.clone()))
@@ -16,7 +19,9 @@ fn upsert_pool_route(db: db::Db) -> impl Filter<Extract = impl warp::Reply, Erro
         .and_then(pool_handler::upsert_pool)
 }
 
-fn query_pool_route(db: db::Db) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
+fn query_pool_route(
+    db: db::Db,
+) -> impl Filter<Extract = impl warp::Reply, Error = warp::Rejection> + Clone {
     warp::path!("query")
         .and(warp::post())
         .and(with_db(db.clone()))

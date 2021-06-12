@@ -16,3 +16,5 @@ serde = { version = "1.0", features = ["derive"] }
 anyhow = "1.0.41"
 thiserror = "1.0"
 parking_lot = "0.11.1"
+dotenv = "0.15.0"
+dotenv_codegen = "0.15.0"

@@ -1,14 +1,14 @@
-use serde::{Serialize, Deserialize};
-use warp::{Rejection, Reply};
+use crate::pool::pool_model;
+use serde::{Deserialize, Serialize};
 use std::convert::Infallible;
 use warp::http::StatusCode;
-use crate::pool::pool_model;
+use warp::{Rejection, Reply};
 
 #[derive(Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ErrorMessage {
     code: u16,
-    message: String
+    message: String,
 }
 
 pub async fn handle_rejection(err: Rejection) -> Result<impl Reply, Infallible> {

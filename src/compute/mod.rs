@@ -6,12 +6,12 @@ pub enum ComputeErr {
     QuantileProbOutOfRange,
 
     #[error("quantile prob must be from 0 to 100")]
-    PercentileProbOutOfRange
+    PercentileProbOutOfRange,
 }
 
 pub fn quantile(arr: &Vec<i32>, prob: f64) -> Result<f64, ComputeErr> {
     if prob < 0_f64 || prob > 1_f64 {
-        return Err(ComputeErr::QuantileProbOutOfRange)
+        return Err(ComputeErr::QuantileProbOutOfRange);
     }
 
     if prob == 0_f64 {
@@ -28,7 +28,7 @@ pub fn quantile(arr: &Vec<i32>, prob: f64) -> Result<f64, ComputeErr> {
     let c = k.ceil();
 
     if f == c {
-        return Ok(arr[k as usize] as f64)
+        return Ok(arr[k as usize] as f64);
     }
 
     let d0 = arr[f as usize] as f64 * (c - k);
@@ -38,7 +38,7 @@ pub fn quantile(arr: &Vec<i32>, prob: f64) -> Result<f64, ComputeErr> {
 
 pub fn percentile(arr: &Vec<i32>, prob: f64) -> Result<f64, ComputeErr> {
     if prob < 0_f64 || prob > 100_f64 {
-        return Err(ComputeErr::PercentileProbOutOfRange)
+        return Err(ComputeErr::PercentileProbOutOfRange);
     }
 
     quantile(arr, prob / 100_f64)

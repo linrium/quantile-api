@@ -1,26 +1,26 @@
-use serde::{Serialize, Deserialize};
-use warp::reject;
+use serde::{Deserialize, Serialize};
 use warp::http::StatusCode;
+use warp::reject;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct QueryPoolResult {
     pub quantile: f64,
-    pub count: usize
+    pub count: usize,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct QueryPoolError {
     pub code: StatusCode,
-    pub message: String
+    pub message: String,
 }
 
 impl reject::Reject for QueryPoolError {}
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct UpsertPoolResult {
-    pub status: String
+    pub status: String,
 }
 
 #[derive(Debug)]
