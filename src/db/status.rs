@@ -19,6 +19,6 @@ mod tests {
     #[test]
     fn test_to_string() {
         assert_eq!(UpdateStatus::Inserted.to_string(), "inserted");
-        assert_eq!(UpdateStatus::Appended.to_string(), "append");
+        assert_eq!(UpdateStatus::Appended.to_string(), "appended");
     }
 }
