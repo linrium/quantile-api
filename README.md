@@ -12,7 +12,7 @@ RUST_LOG=info cargo run --release
 `cargo test`
 
 ## Coverage test
-
+![image](https://user-images.githubusercontent.com/14315537/121771668-da221180-cb9a-11eb-9a0a-a737163b559e.png)
 Following this instruction https://github.com/mozilla/grcov#how-to-get-grcov
 
 ## API
@@ -20,7 +20,7 @@ Following this instruction https://github.com/mozilla/grcov#how-to-get-grcov
 https://documenter.getpostman.com/view/2939491/TzeTJV3d
 
 ### Environments
-- HOST: localhost:3000
+- HOST: localhost:3000 or (deployed version https://compute-quantile.onrender.com)
 
 ### POST /append
 #### Endpoint: {{HOST}}/append
@@ -39,7 +39,7 @@ interface Response {
 ```
 #### Example:
 ```shell script
-curl --location --request POST 'localhost:3000/append' \
+curl --location --request POST 'https://compute-quantile.onrender.com/append' \
 --data-raw '{
     "poolId": 1,
     "poolValues": [1,2,3]
@@ -71,7 +71,7 @@ interface Response {
 ```
 #### Example:
 ```shell script
-curl --location --request POST 'localhost:3000/query' \
+curl --location --request POST 'https://compute-quantile.onrender.com/query' \
 --data-raw '{
     "poolId": 1,
     "percentile": 50
