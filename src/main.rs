@@ -20,6 +20,6 @@ async fn main() {
     let pool_routes = pool_router::create_route(db);
 
     warp::serve(pool_routes.recover(common::response::handle_rejection))
-        .run(([127, 0, 0, 1], port))
+        .run(([0, 0, 0, 0], port))
         .await;
 }
