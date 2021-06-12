@@ -9,18 +9,32 @@ RUST_LOG=info cargo run --release
 ```
 
 ## Unit test
+Pass 100% unit test
 `cargo test`
 
 ## Coverage test
-
+![image](https://user-images.githubusercontent.com/14315537/121771668-da221180-cb9a-11eb-9a0a-a737163b559e.png)
 Following this instruction https://github.com/mozilla/grcov#how-to-get-grcov
+
+## Load test
+(Without caching)
+![image](https://user-images.githubusercontent.com/14315537/121772318-e6a86900-cb9e-11eb-87ba-db2bb635ea39.png)
+
+(With caching)
+![image](https://user-images.githubusercontent.com/14315537/121773474-65ed6b00-cba6-11eb-9d77-93fa6614f5a4.png)
+
+Following this instruction https://github.com/alexfernandez/loadtest
+Example:
+```shell script
+loadtest -n 100000 -c 100 -m POST -T 'application/json' --data '{"poolId": 1, "percentile": 50}' http://localhost:3000/query
+```
 
 ## API
 ### Postman online document
 https://documenter.getpostman.com/view/2939491/TzeTJV3d
 
 ### Environments
-- HOST: localhost:3000
+- HOST: localhost:3000 or (deployed version https://compute-quantile.onrender.com)
 
 ### POST /append
 #### Endpoint: {{HOST}}/append
@@ -39,7 +53,7 @@ interface Response {
 ```
 #### Example:
 ```shell script
-curl --location --request POST 'localhost:3000/append' \
+curl --location --request POST 'https://compute-quantile.onrender.com/append' \
 --data-raw '{
     "poolId": 1,
     "poolValues": [1,2,3]
@@ -71,7 +85,7 @@ interface Response {
 ```
 #### Example:
 ```shell script
-curl --location --request POST 'localhost:3000/query' \
+curl --location --request POST 'https://compute-quantile.onrender.com/query' \
 --data-raw '{
     "poolId": 1,
     "percentile": 50
