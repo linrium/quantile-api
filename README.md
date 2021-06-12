@@ -9,11 +9,21 @@ RUST_LOG=info cargo run --release
 ```
 
 ## Unit test
+Pass 100% unit test
 `cargo test`
 
 ## Coverage test
 ![image](https://user-images.githubusercontent.com/14315537/121771668-da221180-cb9a-11eb-9a0a-a737163b559e.png)
 Following this instruction https://github.com/mozilla/grcov#how-to-get-grcov
+
+## Load test
+(Without caching)
+![image](https://user-images.githubusercontent.com/14315537/121772318-e6a86900-cb9e-11eb-87ba-db2bb635ea39.png)
+Following this instruction https://github.com/alexfernandez/loadtest
+Example:
+```shell script
+loadtest -n 100000 -c 100 -m POST -T 'application/json' --data '{"poolId": 1, "percentile": 50}' http://localhost:3000/query
+```
 
 ## API
 ### Postman online document
