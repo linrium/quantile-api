@@ -15,7 +15,7 @@ RUST_LOG=info cargo run --release
 ### Postman online document
 https://documenter.getpostman.com/view/2939491/TzeTJV3d
 
-### environments
+### Environments
 - HOST: localhost:3000
 
 ### POST /append
@@ -32,6 +32,14 @@ interface Body {
 interface Response {
   status: "inserted" | "appended"
 }
+```
+#### Example:
+```shell script
+curl --location --request POST 'localhost:3000/append' \
+--data-raw '{
+    "poolId": 1,
+    "poolValues": [1,2,3]
+}'
 ```
 
 ### POST /query
@@ -56,4 +64,12 @@ interface Response {
   code: number,
   message: string
 }
+```
+#### Example:
+```shell script
+curl --location --request POST 'localhost:3000/query' \
+--data-raw '{
+    "poolId": 1,
+    "percentile": 50
+}'
 ```
