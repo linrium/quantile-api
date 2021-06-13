@@ -53,11 +53,24 @@ interface Response {
 ```
 #### Example:
 ```shell script
-curl --location --request POST 'https://compute-quantile.onrender.com/append' \
---data-raw '{
-    "poolId": 1,
-    "poolValues": [1,2,3]
-}'
+curl --location --request POST "localhost:3000/append" \
+--header "Content-Type: application/json" \
+--data-raw "{
+    \"poolId\": 1,
+    \"poolValues\": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+]
+}"
 ```
 
 ### POST /query
@@ -85,9 +98,10 @@ interface Response {
 ```
 #### Example:
 ```shell script
-curl --location --request POST 'https://compute-quantile.onrender.com/query' \
---data-raw '{
-    "poolId": 1,
-    "percentile": 50
-}'
+curl --location --request POST "https://compute-quantile.onrender.com/query" \
+--header "Content-Type: application/json" \
+--data-raw "{
+    \"poolId\": 1,
+    \"percentile\": 50.6
+}"
 ```
