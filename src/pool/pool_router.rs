@@ -44,11 +44,13 @@ mod tests {
     #[tokio::test]
     async fn test_append_pool_insert_success() {
         let db = db::Db::new();
+        let caching = db::Caching::new();
+
         let data = pool_dto::InsertDataDto {
             pool_id: 1,
             pool_values: vec![1, 4, 2],
         };
-        let api = pool_router::create_route(db);
+        let api = pool_router::create_route(db, caching);
 
         let resp = warp::test::request()
             .method("POST")
@@ -70,7 +72,8 @@ mod tests {
     #[tokio::test]
     async fn test_append_pool_update_success() {
         let db = db::Db::new();
-        let api = pool_router::create_route(db);
+        let caching = db::Caching::new();
+        let api = pool_router::create_route(db, caching);
 
         // mock insert
         let data = pool_dto::InsertDataDto {
@@ -110,7 +113,8 @@ mod tests {
     #[tokio::test]
     async fn test_query_pool_success() {
         let db = db::Db::new();
-        let api = pool_router::create_route(db);
+        let caching = db::Caching::new();
+        let api = pool_router::create_route(db, caching);
 
         // mock insert
         let data = pool_dto::InsertDataDto {
@@ -151,7 +155,8 @@ mod tests {
     #[tokio::test]
     async fn test_query_pool_not_found() {
         let db = db::Db::new();
-        let api = pool_router::create_route(db);
+        let caching = db::Caching::new();
+        let api = pool_router::create_route(db, caching);
 
         // test update
         let data = pool_dto::QueryDataDto {

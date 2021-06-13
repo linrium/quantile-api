@@ -43,3 +43,56 @@ impl Caching {
         self.data.lock().remove(&id);
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::db;
+
+    #[test]
+    fn test_set_success() {
+        let caching = db::Caching::new();
+        caching.set(1, 50.0, (1.0, 2));
+
+        let values = caching.get(1, 50.0);
+        assert_eq!(values, Some((1.0, 2)));
+    }
+
+    #[test]
+    fn test_get_success() {
+        let caching = db::Caching::new();
+        caching.set(1, 50.0, (1.0, 2));
+
+        let values = caching.get(1, 50.0);
+        assert_eq!(values, Some((1.0, 2)));
+    }
+
+    #[test]
+    fn test_get_failed() {
+        // test get
+        let caching = db::Caching::new();
+        let values = caching.get(1, 50.0);
+        assert_eq!(values, None);
+
+        // mock set
+        let caching = db::Caching::new();
+        caching.set(1, 50.0, (1.0, 2));
+
+        // test get
+        let values = caching.get(1, 51.0);
+        assert_eq!(values, None);
+    }
+
+    #[test]
+    fn test_remove_success() {
+        let caching = db::Caching::new();
+
+        // mock set
+        caching.set(1, 50.0, (1.0, 2));
+
+        // mock remove
+        caching.remove(1);
+
+        let values = caching.get(1, 50.0);
+        assert_eq!(values, None);
+    }
+}
