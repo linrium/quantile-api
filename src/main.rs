@@ -4,10 +4,11 @@ use warp::Filter;
 extern crate dotenv_codegen;
 extern crate pretty_env_logger;
 
-mod common;
+mod errors;
 mod compute;
 mod db;
 mod pool;
+mod utils;
 
 #[tokio::main]
 async fn main() {
@@ -20,7 +21,7 @@ async fn main() {
 
     let pool_routes = pool_router::create_route(db, caching);
 
-    warp::serve(pool_routes.recover(common::response::handle_rejection))
+    warp::serve(pool_routes.recover(errors::rejection::handle_rejection))
         .run(([0, 0, 0, 0], port))
         .await;
 }

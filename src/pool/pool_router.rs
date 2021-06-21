@@ -1,7 +1,7 @@
-use crate::common::{with_db, with_caching};
 use crate::db;
 use crate::pool::pool_handler;
 use warp::Filter;
+use crate::utils::{with_db, with_caching};
 
 pub fn create_route(
     db: db::Db,

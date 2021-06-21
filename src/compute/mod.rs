@@ -33,6 +33,7 @@ pub fn quantile(arr: &Vec<i32>, prob: f64) -> Result<f64, ComputeErr> {
 
     let d0 = arr[f as usize] as f64 * (c - k);
     let d1 = arr[c as usize] as f64 * (k - f);
+
     Ok(d0 + d1)
 }
 

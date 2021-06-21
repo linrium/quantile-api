@@ -35,16 +35,13 @@ impl Db {
 
         let mut data = self.data.lock();
         if let Some(v) = pool_values {
-            let mut new_values = [v, values].concat();
-            new_values.sort();
+            let new_values = [v, values].concat();
             data.insert(id, new_values);
 
             return Ok(UpdateStatus::Appended);
         }
 
-        let mut new_values = values;
-        new_values.sort();
-        data.insert(id, new_values);
+        data.insert(id, values);
 
         Ok(UpdateStatus::Inserted)
     }
@@ -96,7 +93,7 @@ mod tests {
         // get values
         let result = db.find_by_id(1).await;
 
-        assert_eq!(result, Some(vec![1, 2, 4]));
+        assert_eq!(result, Some(vec![1, 4, 2]));
 
         Ok(())
     }
@@ -119,8 +116,9 @@ mod tests {
 
         // get values
         let result = db.find_by_id(1).await;
+        let expected = vec![1, 4, 2, 3, 7];
 
-        assert_eq!(result, Some(vec![1, 2, 3, 4, 7]));
+        assert_eq!(result, Some(expected));
 
         Ok(())
     }

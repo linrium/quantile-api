@@ -3,7 +3,7 @@ use parking_lot::Mutex;
 use std::collections::HashMap;
 
 type Child = Arc<Mutex<HashMap<String, (f64, usize)>>>;
-type DataSource = Arc<Mutex<HashMap<i32, Child>>>;
+type DataSource = HashMap<i32, Child>;
 
 #[derive(Clone)]
 pub struct Caching {
@@ -13,34 +13,36 @@ pub struct Caching {
 impl Caching {
     pub fn new() -> Self {
         Self {
-            data: Arc::new(Mutex::new(HashMap::new()))
+            data: HashMap::new()
         }
     }
 
-    fn get_parent(&self, id: i32) -> Child {
-        match self.data.lock().get(&id) {
-            Some(v) => {
-                v.clone()
-            },
-            None => Arc::new(Mutex::new(HashMap::new()))
+    pub fn set(&mut self, id: i32, percentile: f64, value: (f64, usize)) {
+        let data = self.data.get(&id);
+        let key = format!("{}", percentile);
+
+        if let Some(v) = data {
+            v.lock().insert(key, value);
+        } else {
+            let mut map = HashMap::new();
+            map.insert(key, value);
+            self.data.insert(id, Arc::new(Mutex::new(map)));
         }
-    }
-
-    pub fn set(&self, id: i32, percentile: f64, value: (f64, usize)) {
-        let data = self.get_parent(id);
-
-        data.clone().lock().insert(format!("{}", percentile), value);
-        self.data.lock().insert(id, data);
     }
 
     pub fn get(&self, id: i32, percentile: f64) -> Option<(f64, usize)> {
-        let data = self.get_parent(id);
+        let data = self.data.get(&id);
+        let key = format!("{}", percentile).to_string();
 
-        data.clone().lock().get(&format!("{}", percentile).to_string()).cloned()
+        if let Some(v) = data {
+            v.lock().get(&key).cloned()
+        } else {
+            None
+        }
     }
 
-    pub fn remove(&self, id: i32) {
-        self.data.lock().remove(&id);
+    pub fn remove(&mut self, id: i32) {
+        self.data.remove(&id);
     }
 }
 
@@ -50,7 +52,7 @@ mod tests {
 
     #[test]
     fn test_set_success() {
-        let caching = db::Caching::new();
+        let mut caching = db::Caching::new();
         caching.set(1, 50.0, (1.0, 2));
 
         let values = caching.get(1, 50.0);
@@ -59,7 +61,7 @@ mod tests {
 
     #[test]
     fn test_get_success() {
-        let caching = db::Caching::new();
+        let mut caching = db::Caching::new();
         caching.set(1, 50.0, (1.0, 2));
 
         let values = caching.get(1, 50.0);
@@ -74,7 +76,7 @@ mod tests {
         assert_eq!(values, None);
 
         // mock set
-        let caching = db::Caching::new();
+        let mut caching = db::Caching::new();
         caching.set(1, 50.0, (1.0, 2));
 
         // test get
@@ -84,7 +86,7 @@ mod tests {
 
     #[test]
     fn test_remove_success() {
-        let caching = db::Caching::new();
+        let mut caching = db::Caching::new();
 
         // mock set
         caching.set(1, 50.0, (1.0, 2));

@@ -26,7 +26,8 @@ pub async fn query_pool(
     let pool_values = db.find_by_id(data.pool_id).await;
 
     // TODO: impl caching
-    if let Some(v) = pool_values {
+    if let Some(mut v) = pool_values {
+        v.sort();
         let quantile =
             compute::percentile(&v, data.percentile).map_err(|e| pool_model::QueryPoolError {
                 code: StatusCode::BAD_REQUEST,

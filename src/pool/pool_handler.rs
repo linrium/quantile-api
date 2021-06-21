@@ -3,7 +3,7 @@ use crate::pool::{pool_dto, pool_service, pool_model};
 
 pub async fn append_pool(
     db: db::Db,
-    caching: db::Caching,
+    mut caching: db::Caching,
     data: pool_dto::InsertDataDto,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     caching.remove(data.pool_id);
@@ -15,7 +15,7 @@ pub async fn append_pool(
 
 pub async fn query_pool(
     db: db::Db,
-    caching: db::Caching,
+    mut caching: db::Caching,
     data: pool_dto::QueryDataDto,
 ) -> Result<Box<dyn warp::Reply>, warp::Rejection> {
     let cache_value = caching.get(data.pool_id, data.percentile);

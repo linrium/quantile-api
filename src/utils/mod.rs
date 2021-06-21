@@ -1,5 +1,3 @@
-pub mod response;
-
 use crate::db;
 use warp::Filter;
 
