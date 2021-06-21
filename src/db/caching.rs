@@ -2,8 +2,8 @@ use std::sync::Arc;
 use parking_lot::Mutex;
 use std::collections::HashMap;
 
-type Child = Arc<Mutex<HashMap<String, (f64, usize)>>>;
-type DataSource = HashMap<i32, Child>;
+type Child = Arc<Mutex<HashMap<String, (f32, usize)>>>;
+type DataSource = Arc<Mutex<HashMap<i32, Child>>>;
 
 #[derive(Clone)]
 pub struct Caching {
@@ -13,28 +13,30 @@ pub struct Caching {
 impl Caching {
     pub fn new() -> Self {
         Self {
-            data: HashMap::new()
+            data: Arc::new(Mutex::new(HashMap::new()))
         }
     }
 
-    pub fn set(&mut self, id: i32, percentile: f64, value: (f64, usize)) {
-        let data = self.data.get(&id);
+    pub fn set(&mut self, id: i32, percentile: f32, value: (f32, usize)) {
         let key = format!("{}", percentile);
-
-        if let Some(v) = data {
-            v.lock().insert(key, value);
-        } else {
-            let mut map = HashMap::new();
-            map.insert(key, value);
-            self.data.insert(id, Arc::new(Mutex::new(map)));
+        let data = self.data.lock().get(&id).cloned();
+        match data {
+            Some(v) => {
+                v.lock().insert(key, value);
+                self.data.lock().insert(id, v);
+            },
+            None => {
+                let mut map = HashMap::new();
+                map.insert(key, value);
+                self.data.lock().insert(id, Arc::new(Mutex::new(map)));
+            }
         }
     }
 
-    pub fn get(&self, id: i32, percentile: f64) -> Option<(f64, usize)> {
-        let data = self.data.get(&id);
+    pub fn get(&self, id: i32, percentile: f32) -> Option<(f32, usize)> {
         let key = format!("{}", percentile).to_string();
 
-        if let Some(v) = data {
+        if let Some(v) = self.data.lock().get(&id) {
             v.lock().get(&key).cloned()
         } else {
             None
@@ -42,7 +44,7 @@ impl Caching {
     }
 
     pub fn remove(&mut self, id: i32) {
-        self.data.remove(&id);
+        self.data.lock().remove(&id);
     }
 }
 

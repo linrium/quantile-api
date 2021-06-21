@@ -11,5 +11,5 @@ pub struct InsertDataDto {
 #[serde(rename_all = "camelCase")]
 pub struct QueryDataDto {
     pub pool_id: i32,
-    pub percentile: f64,
+    pub percentile: f32,
 }

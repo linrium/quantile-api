@@ -67,7 +67,7 @@ mod tests {
         // test query
         let data = pool_dto::QueryDataDto {
             pool_id: 1,
-            percentile: 90_f64,
+            percentile: 90_f32,
         };
         let result = pool_service::query_pool(db.clone(), data).await?;
         let expected = pool_model::QueryPoolResult {
@@ -87,7 +87,7 @@ mod tests {
         // test query
         let data = pool_dto::QueryDataDto {
             pool_id: 1,
-            percentile: 90_f64,
+            percentile: 90_f32,
         };
         let result = pool_service::query_pool(db.clone(), data)
             .await

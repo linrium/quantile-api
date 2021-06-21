@@ -5,7 +5,7 @@ use warp::reject;
 #[derive(Serialize, Deserialize, PartialEq, Debug)]
 #[serde(rename_all = "camelCase")]
 pub struct QueryPoolResult {
-    pub quantile: f64,
+    pub quantile: f32,
     pub count: usize,
 }
 

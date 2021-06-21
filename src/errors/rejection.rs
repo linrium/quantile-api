@@ -40,6 +40,7 @@ pub async fn handle_rejection(err: Rejection) -> Result<impl Reply, Infallible> 
         msg = "UNHANDLED_REJECTION".to_string();
     }
 
+    println!("{}", msg);
     let json = warp::reply::json(&ErrorMessage {
         code: status_code.as_u16(),
         message: msg.into(),
