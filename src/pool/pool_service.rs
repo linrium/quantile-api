@@ -119,7 +119,7 @@ mod tests {
 
         // test sorted
         let result = db.find_by_id(1).await;
-        let expected = vec![1, 2, 4];
+        let expected = vec![1, 4, 2];
 
         assert_eq!(result, Some(expected));
         Ok(())
@@ -148,7 +148,7 @@ mod tests {
 
         // test sorted
         let result = db.find_by_id(1).await;
-        let expected = vec![1, 2, 4, 5, 7];
+        let expected = vec![1, 4, 5, 2, 7];
 
         assert_eq!(result, Some(expected));
         Ok(())

@@ -1,10 +1,9 @@
 use crate::db::errors::DbError;
 use crate::db::status::UpdateStatus;
-use parking_lot::Mutex;
-use std::collections::HashMap;
 use std::sync::Arc;
+use dashmap::DashMap;
 
-type DataSource = Arc<Mutex<HashMap<i32, Vec<i32>>>>;
+type DataSource = Arc<DashMap<i32, Vec<i32>>>;
 
 #[derive(Clone)]
 pub struct Db {
@@ -14,13 +13,16 @@ pub struct Db {
 impl Db {
     pub fn new() -> Self {
         Db {
-            data: Arc::new(Mutex::new(HashMap::new())),
+            data: Arc::new(DashMap::new()),
         }
     }
 
     pub async fn find_by_id(&self, id: i32) -> Option<Vec<i32>> {
-        let data = self.data.lock();
-        data.get(&id).cloned()
+        if let Some(v) = self.data.get(&id) {
+            return Some(v.value().clone())
+        }
+
+        return None
     }
 
     pub async fn update_by_id(
@@ -33,15 +35,14 @@ impl Db {
             None => None,
         };
 
-        let mut data = self.data.lock();
         if let Some(v) = pool_values {
             let new_values = [v, values].concat();
-            data.insert(id, new_values);
+            self.data.insert(id, new_values);
 
             return Ok(UpdateStatus::Appended);
         }
 
-        data.insert(id, values);
+        self.data.insert(id, values);
 
         Ok(UpdateStatus::Inserted)
     }

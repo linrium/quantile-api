@@ -1,9 +1,8 @@
 use std::sync::Arc;
-use parking_lot::Mutex;
-use std::collections::HashMap;
+use dashmap::DashMap;
 
-type Child = Arc<Mutex<HashMap<String, (f32, usize)>>>;
-type DataSource = Arc<Mutex<HashMap<i32, Child>>>;
+type Child = Arc<DashMap<String, (f32, usize)>>;
+type DataSource = Arc<DashMap<i32, Child>>;
 
 #[derive(Clone)]
 pub struct Caching {
@@ -13,22 +12,20 @@ pub struct Caching {
 impl Caching {
     pub fn new() -> Self {
         Self {
-            data: Arc::new(Mutex::new(HashMap::new()))
+            data: Arc::new(DashMap::new())
         }
     }
 
     pub fn set(&mut self, id: i32, percentile: f32, value: (f32, usize)) {
         let key = format!("{}", percentile);
-        let data = self.data.lock().get(&id).cloned();
-        match data {
+        match self.data.get(&id) {
             Some(v) => {
-                v.lock().insert(key, value);
-                self.data.lock().insert(id, v);
+                v.insert(key, value);
             },
             None => {
-                let mut map = HashMap::new();
+                let map = DashMap::new();
                 map.insert(key, value);
-                self.data.lock().insert(id, Arc::new(Mutex::new(map)));
+                self.data.insert(id, Arc::new(map));
             }
         }
     }
@@ -36,15 +33,19 @@ impl Caching {
     pub fn get(&self, id: i32, percentile: f32) -> Option<(f32, usize)> {
         let key = format!("{}", percentile).to_string();
 
-        if let Some(v) = self.data.lock().get(&id) {
-            v.lock().get(&key).cloned()
+        if let Some(v) = self.data.get(&id) {
+            if let Some(nested) = v.get(&key) {
+                return Some(nested.value().clone());
+            }
+
+            return None;
         } else {
             None
         }
     }
 
     pub fn remove(&mut self, id: i32) {
-        self.data.lock().remove(&id);
+        self.data.remove(&id);
     }
 }
 

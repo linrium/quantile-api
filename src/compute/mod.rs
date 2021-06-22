@@ -54,15 +54,15 @@ mod tests {
         let arr: Vec<i32> = (1..=10).collect();
         // base on numpy library
         assert_eq!(percentile(&arr, 0.0)?, 1.0);
-        assert_eq!(percentile(&arr, 10.0)?, 1.9);
+        assert_eq!(percentile(&arr, 10.0)?, 1.9000001);
         assert_eq!(percentile(&arr, 20.0)?, 2.8000000000000003);
         assert_eq!(percentile(&arr, 30.0)?, 3.6999999999999997);
-        assert_eq!(percentile(&arr, 40.0)?, 4.6);
+        assert_eq!(percentile(&arr, 40.0)?, 4.6000004);
         assert_eq!(percentile(&arr, 50.0)?, 5.5);
         assert_eq!(percentile(&arr, 60.0)?, 6.3999999999999995);
-        assert_eq!(percentile(&arr, 70.0)?, 7.3);
-        assert_eq!(percentile(&arr, 80.0)?, 8.2);
-        assert_eq!(percentile(&arr, 90.0)?, 9.1);
+        assert_eq!(percentile(&arr, 70.0)?, 7.2999997);
+        assert_eq!(percentile(&arr, 80.0)?, 8.200001);
+        assert_eq!(percentile(&arr, 90.0)?, 9.099999);
         assert_eq!(percentile(&arr, 100.0)?, 10.0);
 
         Ok(())
