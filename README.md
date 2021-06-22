@@ -13,7 +13,7 @@ RUST_LOG=info cargo run --release
 - Change f64 to f32 to improve memory usage
 - Refactor common package (to errors and utils packages)
 - Sort value in query service (remove sort in append service)
-- Replace Mutex<Hashmap> to Dashmap (benchmark [here](https://github.com/xacrimon/conc-map-bench))
+- Replace Mutex<Hashmap> to Dashmap - fast concurrent hashmap share between threads (benchmark [here](https://github.com/xacrimon/conc-map-bench))
 - Update load test with Dashmap
 
 ## Unit test
