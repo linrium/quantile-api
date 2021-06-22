@@ -14,6 +14,7 @@ RUST_LOG=info cargo run --release
 - Refactor common package (to errors and utils packages)
 - Sort value in query service (remove sort in append service)
 - Replace Mutex<Hashmap> to Dashmap (benchmark [here](https://github.com/xacrimon/conc-map-bench))
+- Update load test with Dashmap
 
 ## Unit test
 Pass 100% unit test
@@ -29,6 +30,9 @@ Following this instruction https://github.com/mozilla/grcov#how-to-get-grcov
 
 (With caching)
 ![image](https://user-images.githubusercontent.com/14315537/121773474-65ed6b00-cba6-11eb-9d77-93fa6614f5a4.png)
+
+(With Dashmap)
+![image](https://user-images.githubusercontent.com/14315537/122865028-df781c80-d34f-11eb-8524-3010a29dc0e4.png)
 
 Following this instruction https://github.com/alexfernandez/loadtest
 Example:
